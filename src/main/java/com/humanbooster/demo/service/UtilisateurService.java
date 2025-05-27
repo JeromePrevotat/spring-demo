@@ -32,9 +32,21 @@ public class UtilisateurService {
         return utilisateurRepository.findById(id);
     }
     
+    @Transactional
     public Optional<Utilisateur> deleteUtilisateurById(int id){
         Optional<Utilisateur> utilisateurOpt = utilisateurRepository.findById(id);
         utilisateurOpt.ifPresent(utilisateurRepository::delete);
         return utilisateurOpt;
+    }
+
+    @Transactional
+    public Optional<Utilisateur> updateUtilisateur(Utilisateur newUtilisateur, int id){
+        return utilisateurRepository.findById(id)
+            .map(existingUtilisateur -> {
+            existingUtilisateur.setNom(newUtilisateur.getNom());
+            existingUtilisateur.setEmail(newUtilisateur.getEmail());
+            existingUtilisateur.setMotDePasse(newUtilisateur.getMotDePasse());
+            return utilisateurRepository.save(existingUtilisateur);
+        });
     }
 }
